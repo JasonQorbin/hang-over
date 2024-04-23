@@ -8,10 +8,21 @@ function HangingMan() {
     )
 }
 
-function WordDisplay() {
+function WordDisplay(props) {
+    let outputLetters = Array.from(props.currentWord);
+    let outputElements = [];
+    for (let i = 0; i < outputLetters.length - 1; i++) {
+        if (props.revealedLetters.indexOf(i) == -1) {
+            outputElements.push(<span className="word-display-letter" key={i}>_</span>);
+        } else {
+            outputElements.push(<span className="word-display-letter" key={i}>{outputLetters[i]}</span>);
+        }
+    }
+
+
     return (
         <div id="word-display">
-            Word Display
+            {outputElements}
         </div>
     )
 }
@@ -24,10 +35,10 @@ function LetterTray() {
     )
 }
 
-function WordAndLetters() {
+function WordAndLetters(props) {
     return (
         <div id="word-and-letters">
-            <WordDisplay/>
+            <WordDisplay currentWord={props.currentWord} revealedLetters={props.revealedLetters}/>
             <LetterTray/>
         </div>
     );
@@ -40,8 +51,8 @@ class Game extends React.Component {
         this.setRevealedLetters = this.setRevealedLetters.bind(this);
         this.setUsedLetters = this.setUsedLetters.bind(this);
         this.state = {
-            currentWord: "",
-            revealedLetters: [],
+            currentWord: "example",
+            revealedLetters: [2],
             usedLetters: [],
         };
     }
@@ -63,7 +74,11 @@ class Game extends React.Component {
         return (
             <div id="game">
                 <HangingMan/>
-                <WordAndLetters/>
+                <WordAndLetters
+                    currentWord={this.state.currentWord}
+                    revealedLetters={this.state.revealedLetters}
+                    usedLetters={this.state.usedLetters}
+                />
             </div>
         )
     }

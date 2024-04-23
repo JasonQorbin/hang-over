@@ -26,6 +26,12 @@
   border : 3px red solid;
   width : 450px;
   height : 100px;
+  font-size : 30pt;
+}
+
+.word-display-letter {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #letter-tray {
