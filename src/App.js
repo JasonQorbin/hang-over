@@ -1,23 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
+
+function HangingMan() {
+    return (
+        <div id="hanging-man-graphic">
+
+        </div>
+    )
+}
+
+function WordDisplay() {
+    return (
+        <div id="word-display">
+            Word Display
+        </div>
+    )
+}
+
+function LetterTray() {
+    return (
+        <div id="letter-tray">
+            Letter Tray
+        </div>
+    )
+}
+
+function WordAndLetters() {
+    return (
+    <div id="word-and-letters">
+        <WordDisplay/>
+        <LetterTray/>
+    </div>
+    );
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <h1>Hello World!</h1>
+        <div id="game">
+            <HangingMan/>
+            <WordAndLetters />
+        </div>
     </div>
   );
 }
