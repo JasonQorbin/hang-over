@@ -1,6 +1,7 @@
 import React from 'react';
 import dictionaryFile from '../assets/dictionary.txt';
 import LoadingScreen from "./LoadingScreen";
+import LetterTray from "./LetterTray";
 
 function HangingMan() {
     return (
@@ -32,19 +33,13 @@ function WordDisplay(props) {
     )
 }
 
-function LetterTray(props) {
-    return (
-        <div id="letter-tray">
-            Letter Tray
-        </div>
-    )
-}
+
 
 function WordAndLetters(props) {
     return (
         <div id="word-and-letters">
             <WordDisplay currentWord={props.currentWord} revealedLetters={props.revealedLetters}/>
-            <LetterTray/>
+            <LetterTray usedLetters={props.usedLetters}/>
         </div>
     );
 }
