@@ -22,6 +22,11 @@ class Game extends React.Component {
         return dictionary[Math.floor(Math.random() * (dictionary.length - 1))];
     }
 
+    resetCurrentWord() {
+        const newWord = this.chooseRandomWord(this.state.dictionary);
+        this.setState({currentWord: newWord});
+    }
+
     readDictionary() {
         return new Promise(function(resolve) {
             fetch(dictionaryFile)
@@ -51,9 +56,6 @@ class Game extends React.Component {
         });
     }
 
-    setCurrentWord(newWord) {
-        this.setState({ currentWord: newWord });
-    }
 
     selectLetter(eventObject) {
         const letterClicked = eventObject.target.innerText
