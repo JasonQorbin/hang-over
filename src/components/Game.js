@@ -35,11 +35,11 @@ function WordDisplay(props) {
 
 
 
-function WordAndLetters(props) {
+function WordPanel(props) {
     return (
         <div id="word-and-letters">
             <WordDisplay currentWord={props.currentWord} revealedLetters={props.revealedLetters}/>
-            <LetterTray usedLetters={props.usedLetters}/>
+            <LetterTray usedLetters={props.usedLetters} selectCallback={props.selectCallback}/>
         </div>
     );
 }
@@ -47,9 +47,7 @@ function WordAndLetters(props) {
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        this.setCurrentWord = this.setCurrentWord.bind(this);
-        this.setRevealedLetters = this.setRevealedLetters.bind(this);
-        this.setUsedLetters = this.setUsedLetters.bind(this);
+        this.selectLetter = this.selectLetter.bind(this);
         this.state = {
             dictionary : [],
             currentWord: "",
@@ -97,12 +95,14 @@ class Game extends React.Component {
         this.setState({ currentWord: newWord });
     }
 
-    setRevealedLetters(newLetters) {
-        this.setState({ revealedLetters: newLetters });
-    }
-
-    setUsedLetters(newLetters) {
-        this.setState({usedLetters: newLetters });
+    selectLetter(eventObject) {
+        const letterClicked = eventObject.target.innerText
+        const positionNumber = letterClicked.codePointAt(0) - 97;
+        let usedLetters = this.state.usedLetters;
+        usedLetters.push(positionNumber);
+        this.setState({
+            usedLetters: usedLetters
+        });
     }
 
     componentDidMount() {
@@ -126,10 +126,11 @@ class Game extends React.Component {
             return (
                 <div id="game">
                     <HangingMan/>
-                    <WordAndLetters
+                    <WordPanel
                         currentWord={this.state.currentWord}
                         revealedLetters={this.state.revealedLetters}
                         usedLetters={this.state.usedLetters}
+                        selectCallback={this.selectLetter}
                     />
                 </div>
             )
