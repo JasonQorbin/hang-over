@@ -11,7 +11,7 @@ class Game extends React.Component {
         this.state = {
             dictionary : [],
             currentWord: "",
-            revealedLetters: [2],
+            revealedLetters: [],
             usedLetters: [],
             applicationReady: false,
             applicationLoading:false
@@ -56,14 +56,42 @@ class Game extends React.Component {
         });
     }
 
+    findLetter(letter) {
+        let answer = [];
+        answer = this.findLetterRecursive(answer, letter,  0);
+        return answer;
+    }
+
+    findLetterRecursive(prevAnswers, letter, startIndex) {
+        const currentWord = this.state.currentWord;
+        if (startIndex == currentWord.length) {
+            return prevAnswers;
+        }
+
+        const nextIndex = currentWord.toLowerCase().indexOf(letter, startIndex);
+        if (nextIndex == -1) {
+            return prevAnswers;
+        } else {
+            prevAnswers.push(nextIndex);
+            return this.findLetterRecursive(prevAnswers, letter, nextIndex + 1);
+        }
+    }
 
     selectLetter(eventObject) {
+        let { usedLetters, revealedLetters } = this.state;
+
         const letterClicked = eventObject.target.innerText
         const positionNumber = letterClicked.codePointAt(0) - 97;
-        let usedLetters = this.state.usedLetters;
+        const uncoveredLettersInTheWord = this.findLetter(letterClicked);
+        if ( uncoveredLettersInTheWord.length > 0) {
+            revealedLetters = revealedLetters.concat(uncoveredLettersInTheWord)
+        }
+
+
         usedLetters.push(positionNumber);
         this.setState({
-            usedLetters: usedLetters
+            usedLetters: usedLetters,
+            revealedLetters: revealedLetters
         });
     }
 
