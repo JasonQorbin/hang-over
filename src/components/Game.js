@@ -186,6 +186,15 @@ class Game extends React.Component {
         }
     }
 
+    /**
+     * Asynchronous method to get the game is a state of being ready to play i.e. all assets loaded (the dictionary)
+     * and state variables initialised. The reading of the dictionary in particular can take a noticeable amount of
+     * time to load so a "Loading" screen should be displayed until the <code>applicationReady</code> state variable
+     * is set to <code>true</code>.
+     *
+     * @returns {Promise<void>} Can be ignored because it doesn't get resolved. Rather proceed when the applicationReady
+     * state variable is set to true.
+     */
     async getReady() {
         this.readDictionary(6).then((dictionaryWords) => {
             const newWord = this.chooseRandomWord(dictionaryWords);
