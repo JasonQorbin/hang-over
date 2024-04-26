@@ -62,12 +62,29 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * This method serves as the entry point to the recursive method (below) that finds all instances of the
+     * selected letter in the current word.
+     *
+     * @param letter The letter (lowercase expected) that the user clicked.
+     * @returns An array with index positions where the given letter was found in the current word.
+     */
     findLetter(letter) {
         let answer = [];
         answer = this.findLetterRecursive(answer, letter,  0);
         return answer;
     }
 
+    /**
+     * Recursive method to find all the instances of the given letter in the current word using the
+     * <code>indexOf</code> function. Each time a new instance is found the index is appended to the
+     * answer and the method is called again searching from the index position after that.
+     *
+     * @param prevAnswers The answers found in previous recursive calls. Pass an empty array to start.
+     * @param letter The letter being searched for.
+     * @param startIndex The index position to search from. Pass 0 to start.
+     * @returns An array containing the index positions of each occurrence of the letter in the current word.
+     */
     findLetterRecursive(prevAnswers, letter, startIndex) {
         const currentWord = this.state.currentWord;
         if (startIndex == currentWord.length) {
