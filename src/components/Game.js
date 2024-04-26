@@ -14,9 +14,15 @@ class Game extends React.Component {
             revealedLetters: [],
             usedLetters: [],
             applicationReady: false,
-            applicationLoading:false
+            applicationLoading:false,
+            hangedManStage: 0,
+            levelFinished: false,
+            levelWon: false
         };
     }
+
+    /** The maximum number of incorrect guesses before you lose the level/word. */
+    MAX_DEATH_STAGES = 11;
 
     chooseRandomWord(dictionary) {
         return dictionary[Math.floor(Math.random() * (dictionary.length - 1))];
@@ -78,21 +84,49 @@ class Game extends React.Component {
     }
 
     selectLetter(eventObject) {
-        let { usedLetters, revealedLetters } = this.state;
-
+        let { usedLetters, revealedLetters, currentWord, hangedManStage } = this.state;
         const letterClicked = eventObject.target.innerText
         const positionNumber = letterClicked.codePointAt(0) - 97;
+
+        //Reveal newly found letters in the current word
         const uncoveredLettersInTheWord = this.findLetter(letterClicked);
         if ( uncoveredLettersInTheWord.length > 0) {
             revealedLetters = revealedLetters.concat(uncoveredLettersInTheWord)
         }
 
-
+        //Register that the letter that was clicked is now used
         usedLetters.push(positionNumber);
+
+        //Check if the win condition has been reached
+        const levelWon = revealedLetters.length == currentWord.length;
+        if (levelWon) {
+            //Do something
+            //Would like to show a splash screen before continuing
+        }
+
+        //Todo: Check for loss condition here and act appropriately
+        if (uncoveredLettersInTheWord.length == 0) {
+            hangedManStage++;
+            loadNewLevel(gameWon);
+        }
+        const levelLost = hangedManStage >= this.MAX_DEATH_STAGES;
+        if (levelLost) {
+            //Losing splash screen
+            loadNewLevel(gameWon);
+        }
+
+
+        //The win and loss can never coincide because a letter is either correct or incorrect. So no need to
+        //provide for both being true at the same time.
+
+        //Update game state to redraw and continue.
         this.setState({
             usedLetters: usedLetters,
             revealedLetters: revealedLetters
         });
+
+
+
     }
 
     componentDidMount() {
