@@ -33,7 +33,15 @@ class Game extends React.Component {
         this.setState({currentWord: newWord});
     }
 
-    readDictionary() {
+
+    /**
+     * Method to asynchronously read the dictionary file when the application initialises. Skips over words
+     * below a certain length
+     *
+     * @param minimumWordLength An integer specifying the minimum word length that will be accepted.
+     * @returns {Promise<string[]>} Return a promise resolving to the array of the words that must
+     */
+    readDictionary(minimumWordLength) {
         return new Promise(function(resolve) {
             fetch(dictionaryFile)
                 .then(result => {
@@ -51,7 +59,7 @@ class Game extends React.Component {
                             }
                         } else {
                             //Only take words longer than 5 characters
-                            if (lines[i].length > 5) {
+                            if (lines[i].length >= minimumWordLength) {
                                 chosenWords.push(lines[i]);
                             }
                         }
@@ -179,7 +187,7 @@ class Game extends React.Component {
     }
 
     async getReady() {
-        this.readDictionary().then((dictionaryWords) => {
+        this.readDictionary(6).then((dictionaryWords) => {
             const newWord = this.chooseRandomWord(dictionaryWords);
             this.setState({
                 dictionary: dictionaryWords,
