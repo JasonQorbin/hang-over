@@ -4,6 +4,7 @@ import LoadingScreen from "./LoadingScreen";
 import WordPanel from "./WordPanel";
 import HangingMan from "./HangingMan";
 import WinLossScreen from "./WinLossScreen";
+import Header from "./Header";
 
 class Game extends React.Component {
     constructor(props) {
@@ -51,19 +52,23 @@ class Game extends React.Component {
 
         } else {
             return (
-                <div id="game">
-                    <HangingMan
-                        hangedManStage={hangedManStage}
-                        gamesWon={gamesWon}
-                        gamesPlayed={gamesPlayed}
-                        winStreak={winStreak}
+                <div>
+                    <Header
+                    gamesWon={gamesWon}
+                    gamesPlayed={gamesPlayed}
+                    winStreak={winStreak}
                     />
-                    <WordPanel
-                        currentWord={currentWord}
-                        revealedLetters={revealedLetters}
-                        usedLetters={usedLetters}
-                        selectCallback={this.selectLetter}
-                    />
+                    <div id="game">
+                        <HangingMan
+                            hangedManStage={hangedManStage}
+                        />
+                        <WordPanel
+                            currentWord={currentWord}
+                            revealedLetters={revealedLetters}
+                            usedLetters={usedLetters}
+                            selectCallback={this.selectLetter}
+                        />
+                    </div>
                 </div>
             )
         }

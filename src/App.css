@@ -3,6 +3,10 @@
   border : 3px blue solid;
 }
 
+.bold {
+  font-weight : bold;
+}
+
 #game {
   display:flex;
   flex-direction: row;
