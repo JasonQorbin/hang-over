@@ -175,7 +175,6 @@ class Game extends React.Component {
             return;
         }
 
-        //Todo: Check for loss condition here and act appropriately
         if (uncoveredLettersInTheWord.length == 0) {
             hangedManStage++;
         }
