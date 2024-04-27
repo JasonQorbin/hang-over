@@ -16,8 +16,9 @@ class Game extends React.Component {
             applicationReady: false,
             applicationLoading:false,
             hangedManStage: 0,
-            levelFinished: false,
-            levelWon: false
+            gamesWon: 0,
+            winStreak: 0,
+            gamesPlayed: 0,
         };
     }
 
@@ -27,12 +28,6 @@ class Game extends React.Component {
     chooseRandomWord(dictionary) {
         return dictionary[Math.floor(Math.random() * (dictionary.length - 1))];
     }
-
-    resetCurrentWord() {
-        const newWord = this.chooseRandomWord(this.state.dictionary);
-        this.setState({currentWord: newWord});
-    }
-
 
     /**
      * Method to asynchronously read the dictionary file when the application initialises. Skips over words
@@ -125,19 +120,18 @@ class Game extends React.Component {
         //Check if the win condition has been reached
         const levelWon = revealedLetters.length == currentWord.length;
         if (levelWon) {
-            //Do something
-            //Would like to show a splash screen before continuing
+            this.loadNewLevel(true)
+            return;
         }
 
         //Todo: Check for loss condition here and act appropriately
         if (uncoveredLettersInTheWord.length == 0) {
             hangedManStage++;
-            loadNewLevel(gameWon);
         }
         const levelLost = hangedManStage >= this.MAX_DEATH_STAGES;
         if (levelLost) {
-            //Losing splash screen
-            loadNewLevel(gameWon);
+            this.loadNewLevel(false);
+            return;
         }
 
 
@@ -147,7 +141,8 @@ class Game extends React.Component {
         //Update game state to redraw and continue.
         this.setState({
             usedLetters: usedLetters,
-            revealedLetters: revealedLetters
+            revealedLetters: revealedLetters,
+            hangedManStage: hangedManStage
         });
 
 
@@ -159,13 +154,16 @@ class Game extends React.Component {
 
         if (!applicationReady && !applicationLoading) {
             console.log("Getting the application ready...")
-            this.getReady().then(r => {console.log("Application should be ready now...")});
+            this.getReady().then(() => {console.log("Application should be ready now...")});
             this.setState({applicationLoading: true});
         }
     }
 
     render() {
-        if (!this.state.applicationReady) {
+        const {applicationReady, hangedManStage, gamesWon,gamesPlayed,
+            winStreak, usedLetters, currentWord, revealedLetters} = this.state;
+
+        if (!applicationReady) {
             return (
                 <div>
                     <LoadingScreen />
@@ -174,11 +172,16 @@ class Game extends React.Component {
         } else {
             return (
                 <div id="game">
-                    <HangingMan/>
+                    <HangingMan
+                        hangedManStage={hangedManStage}
+                        gamesWon={gamesWon}
+                        gamesPlayed={gamesPlayed}
+                        winStreak={winStreak}
+                    />
                     <WordPanel
-                        currentWord={this.state.currentWord}
-                        revealedLetters={this.state.revealedLetters}
-                        usedLetters={this.state.usedLetters}
+                        currentWord={currentWord}
+                        revealedLetters={revealedLetters}
+                        usedLetters={usedLetters}
                         selectCallback={this.selectLetter}
                     />
                 </div>
@@ -204,6 +207,29 @@ class Game extends React.Component {
                 applicationReady: true,
                 applicationLoading: false
             });
+        });
+    }
+
+    loadNewLevel(wonTheLastGame) {
+        let { gamesWon, winStreak, gamesPlayed, dictionary } = this.state;
+        gamesPlayed++;
+        if (wonTheLastGame) {
+            gamesWon++;
+            winStreak++;
+        } else {
+            winStreak = 0;
+        }
+
+        const newWord = this.chooseRandomWord(dictionary);
+
+        this.setState({
+            gamesPlayed: gamesPlayed,
+            winStreak : winStreak,
+            gamesWon: gamesWon,
+            revealedLetters: [],
+            usedLetters: [],
+            hangedManStage: 0,
+            currentWord: newWord
         });
     }
 }
