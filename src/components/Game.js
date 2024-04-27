@@ -120,39 +120,40 @@ class Game extends React.Component {
 
     /**
      * This method serves as the entry point to the recursive method (below) that finds all instances of the
-     * selected letter in the current word.
+     * selected letter in the given word.
      *
      * @param letter The letter (lowercase expected) that the user clicked.
-     * @returns An array with index positions where the given letter was found in the current word.
+     * @param word The word to search in.
+     * @returns An array with index positions where the given letter was found in the given word.
      */
-    findLetter(letter) {
+    findLetter(letter, word) {
         let answer = [];
-        answer = this.findLetterRecursive(answer, letter,  0);
+        answer = this.findLetterRecursive(answer, letter,  0, word);
         return answer;
     }
 
     /**
-     * Recursive method to find all the instances of the given letter in the current word using the
+     * Recursive method to find all the instances of the given letter in the given word using the
      * <code>indexOf</code> function. Each time a new instance is found the index is appended to the
      * answer and the method is called again searching from the index position after that.
      *
      * @param prevAnswers The answers found in previous recursive calls. Pass an empty array to start.
      * @param letter The letter being searched for.
      * @param startIndex The index position to search from. Pass 0 to start.
-     * @returns An array containing the index positions of each occurrence of the letter in the current word.
+     * @param word The word to search in
+     * @returns An array containing the index positions of each occurrence of the letter in the given word.
      */
-    findLetterRecursive(prevAnswers, letter, startIndex) {
-        const currentWord = this.state.currentWord;
-        if (startIndex == currentWord.length) {
+    findLetterRecursive(prevAnswers, letter, startIndex, word) {
+        if (startIndex == word.length) {
             return prevAnswers;
         }
 
-        const nextIndex = currentWord.toLowerCase().indexOf(letter, startIndex);
+        const nextIndex = word.toLowerCase().indexOf(letter, startIndex);
         if (nextIndex == -1) {
             return prevAnswers;
         } else {
             prevAnswers.push(nextIndex);
-            return this.findLetterRecursive(prevAnswers, letter, nextIndex + 1);
+            return this.findLetterRecursive(prevAnswers, letter, nextIndex + 1, word);
         }
     }
 
@@ -162,7 +163,7 @@ class Game extends React.Component {
         const positionNumber = letterClicked.codePointAt(0) - 97;
 
         //Reveal newly found letters in the current word
-        const uncoveredLettersInTheWord = this.findLetter(letterClicked);
+        const uncoveredLettersInTheWord = this.findLetter(letterClicked, currentWord);
         if ( uncoveredLettersInTheWord.length > 0) {
             revealedLetters = revealedLetters.concat(uncoveredLettersInTheWord)
         }
@@ -249,12 +250,14 @@ class Game extends React.Component {
         }
 
         const newWord = this.chooseRandomWord(dictionary);
+        let revealedSpecialCharacters = [];
+        revealedSpecialCharacters.unshift(this.findLetter('-', newWord));
 
         this.setState({
             gamesPlayed: gamesPlayed,
             winStreak : winStreak,
             gamesWon: gamesWon,
-            revealedLetters: [],
+            revealedLetters: revealedSpecialCharacters,
             usedLetters: [],
             hangedManStage: 0,
             currentWord: newWord,
