@@ -127,9 +127,7 @@ class Game extends React.Component {
      * @returns An array with index positions where the given letter was found in the given word.
      */
     findLetter(letter, word) {
-        let answer = [];
-        answer = this.findLetterRecursive(answer, letter,  0, word);
-        return answer;
+        return this.findLetterRecursive([], letter,  0, word);
     }
 
     /**
@@ -231,7 +229,7 @@ class Game extends React.Component {
         this.readDictionary(6).then((dictionaryWords) => {
             const newWord = this.chooseRandomWord(dictionaryWords);
             let specialCharacterPositions = [];
-            specialCharacterPositions.unshift(this.findLetter('-', newWord));
+            specialCharacterPositions = specialCharacterPositions.concat(this.findLetter('-', newWord));
             this.setState({
                 dictionary: dictionaryWords,
                 currentWord: newWord,
@@ -254,7 +252,7 @@ class Game extends React.Component {
 
         const newWord = this.chooseRandomWord(dictionary);
         let revealedSpecialCharacters = [];
-        revealedSpecialCharacters.unshift(this.findLetter('-', newWord));
+        revealedSpecialCharacters = revealedSpecialCharacters.concat(this.findLetter('-', newWord));
 
         this.setState({
             gamesPlayed: gamesPlayed,
