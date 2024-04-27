@@ -230,11 +230,14 @@ class Game extends React.Component {
     async getReady() {
         this.readDictionary(6).then((dictionaryWords) => {
             const newWord = this.chooseRandomWord(dictionaryWords);
+            let specialCharacterPositions = [];
+            specialCharacterPositions.unshift(this.findLetter('-', newWord));
             this.setState({
                 dictionary: dictionaryWords,
                 currentWord: newWord,
                 applicationReady: true,
-                applicationLoading: false
+                applicationLoading: false,
+                revealedLetters: specialCharacterPositions
             });
         });
     }
