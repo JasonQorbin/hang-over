@@ -3,11 +3,13 @@ import dictionaryFile from '../assets/dictionary.txt';
 import LoadingScreen from "./LoadingScreen";
 import WordPanel from "./WordPanel";
 import HangingMan from "./HangingMan";
+import WinLossScreen from "./WinLossScreen";
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
         this.selectLetter = this.selectLetter.bind(this);
+        this.loadNewLevel = this.loadNewLevel.bind(this);
         this.state = {
             dictionary : [],
             currentWord: "",
@@ -19,11 +21,57 @@ class Game extends React.Component {
             gamesWon: 0,
             winStreak: 0,
             gamesPlayed: 0,
+            levelDone: false,
+            wonLastLevel: false
         };
+    }
+
+    render() {
+        const {
+            applicationReady, hangedManStage, gamesWon, gamesPlayed,
+            winStreak, usedLetters, currentWord, revealedLetters, levelDone, wonLastLevel
+        } = this.state;
+
+        if (!applicationReady) {
+            return (
+                <div id="game">
+                    <LoadingScreen/>
+                </div>
+            )
+        } else if (levelDone) {
+            return (
+                <div id="game">
+                    <WinLossScreen
+                        currentWord={currentWord}
+                        wonLastLevel={wonLastLevel}
+                        loadNextLevelCallback={this.loadNewLevel}
+                    />
+                </div>
+            )
+
+        } else {
+            return (
+                <div id="game">
+                    <HangingMan
+                        hangedManStage={hangedManStage}
+                        gamesWon={gamesWon}
+                        gamesPlayed={gamesPlayed}
+                        winStreak={winStreak}
+                    />
+                    <WordPanel
+                        currentWord={currentWord}
+                        revealedLetters={revealedLetters}
+                        usedLetters={usedLetters}
+                        selectCallback={this.selectLetter}
+                    />
+                </div>
+            )
+        }
     }
 
     /** The maximum number of incorrect guesses before you lose the level/word. */
     MAX_DEATH_STAGES = 11;
+
 
     chooseRandomWord(dictionary) {
         return dictionary[Math.floor(Math.random() * (dictionary.length - 1))];
@@ -120,7 +168,10 @@ class Game extends React.Component {
         //Check if the win condition has been reached
         const levelWon = revealedLetters.length == currentWord.length;
         if (levelWon) {
-            this.loadNewLevel(true)
+            this.setState({
+                wonLastLevel: true,
+                levelDone: true
+            })
             return;
         }
 
@@ -130,7 +181,10 @@ class Game extends React.Component {
         }
         const levelLost = hangedManStage >= this.MAX_DEATH_STAGES;
         if (levelLost) {
-            this.loadNewLevel(false);
+            this.setState({
+                wonLastLevel: false,
+                levelDone: true
+            })
             return;
         }
 
@@ -159,36 +213,6 @@ class Game extends React.Component {
         }
     }
 
-    render() {
-        const {applicationReady, hangedManStage, gamesWon,gamesPlayed,
-            winStreak, usedLetters, currentWord, revealedLetters} = this.state;
-
-        if (!applicationReady) {
-            return (
-                <div>
-                    <LoadingScreen />
-                </div>
-            )
-        } else {
-            return (
-                <div id="game">
-                    <HangingMan
-                        hangedManStage={hangedManStage}
-                        gamesWon={gamesWon}
-                        gamesPlayed={gamesPlayed}
-                        winStreak={winStreak}
-                    />
-                    <WordPanel
-                        currentWord={currentWord}
-                        revealedLetters={revealedLetters}
-                        usedLetters={usedLetters}
-                        selectCallback={this.selectLetter}
-                    />
-                </div>
-            )
-        }
-    }
-
     /**
      * Asynchronous method to get the game is a state of being ready to play i.e. all assets loaded (the dictionary)
      * and state variables initialised. The reading of the dictionary in particular can take a noticeable amount of
@@ -210,10 +234,10 @@ class Game extends React.Component {
         });
     }
 
-    loadNewLevel(wonTheLastGame) {
-        let { gamesWon, winStreak, gamesPlayed, dictionary } = this.state;
+    loadNewLevel() {
+        let { gamesWon, winStreak, gamesPlayed, dictionary, wonLastLevel } = this.state;
         gamesPlayed++;
-        if (wonTheLastGame) {
+        if (wonLastLevel) {
             gamesWon++;
             winStreak++;
         } else {
@@ -229,7 +253,9 @@ class Game extends React.Component {
             revealedLetters: [],
             usedLetters: [],
             hangedManStage: 0,
-            currentWord: newWord
+            currentWord: newWord,
+            wonLastLevel:false,
+            levelDone: false
         });
     }
 }

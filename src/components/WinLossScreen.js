@@ -19,3 +19,5 @@ function WinLossScreen(props) {
         );
     }
 }
+
+export default WinLossScreen
