@@ -1,5 +1,5 @@
 function WinLossScreen(props) {
-    if (props.wonTheLastLevel) {
+    if (props.wonLastLevel) {
         return (
             <div>
                 <h2>Congratulations!!!</h2>
@@ -8,6 +8,15 @@ function WinLossScreen(props) {
                 <button onClick={props.loadNextLevelCallback}>Next level</button>
             </div>
         );
+    } else if (props.levelSkipped) {
+        return (
+            <div>
+                <h2>You skipped the level...</h2>
+                <p>The word you were looking for was:</p>
+                <h3>{props.currentWord}</h3>
+                <button onClick={props.loadNextLevelCallback}>Next level</button>
+            </div>
+        )
     } else {
         return (
             <div>

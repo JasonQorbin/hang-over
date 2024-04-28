@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 import dictionaryFile from '../assets/dictionary.txt';
 import LoadingScreen from "./LoadingScreen";
 import WordPanel from "./WordPanel";
@@ -9,8 +10,12 @@ import Header from "./Header";
 class Game extends React.Component {
     constructor(props) {
         super(props);
+
         this.selectLetter = this.selectLetter.bind(this);
         this.loadNewLevel = this.loadNewLevel.bind(this);
+        this.skipLevel = this.skipLevel.bind(this);
+        this.resetScores = this.resetScores.bind(this);
+
         this.state = {
             dictionary : [],
             currentWord: "",
@@ -23,14 +28,16 @@ class Game extends React.Component {
             winStreak: 0,
             gamesPlayed: 0,
             levelDone: false,
-            wonLastLevel: false
+            wonLastLevel: false,
+            levelSkipped: false
         };
     }
 
     render() {
         const {
             applicationReady, hangedManStage, gamesWon, gamesPlayed,
-            winStreak, usedLetters, currentWord, revealedLetters, levelDone, wonLastLevel
+            winStreak, usedLetters, currentWord, revealedLetters,
+            levelDone, wonLastLevel, levelSkipped
         } = this.state;
 
         if (!applicationReady) {
@@ -39,13 +46,14 @@ class Game extends React.Component {
                     <LoadingScreen/>
                 </div>
             )
-        } else if (levelDone) {
+        } else if (levelSkipped || levelDone) {
             return (
                 <div id="game">
                     <WinLossScreen
                         currentWord={currentWord}
                         wonLastLevel={wonLastLevel}
                         loadNextLevelCallback={this.loadNewLevel}
+                        levelSkipped={levelSkipped}
                     />
                 </div>
             )
@@ -69,6 +77,8 @@ class Game extends React.Component {
                             selectCallback={this.selectLetter}
                         />
                     </div>
+                    <Button variant="outline-primary" onClick={this.skipLevel}>Skip Level</Button>
+                    <Button variant="outline-primary" onClick={this.resetScores}>Reset Scores</Button>
                 </div>
             )
         }
@@ -201,16 +211,12 @@ class Game extends React.Component {
             revealedLetters: revealedLetters,
             hangedManStage: hangedManStage
         });
-
-
-
     }
 
     componentDidMount() {
         const {applicationReady, applicationLoading} = this.state;
 
         if (!applicationReady && !applicationLoading) {
-            console.log("Getting the application ready...")
             this.getReady().then(() => {console.log("Application should be ready now...")});
             this.setState({applicationLoading: true});
         }
@@ -263,9 +269,39 @@ class Game extends React.Component {
             hangedManStage: 0,
             currentWord: newWord,
             wonLastLevel:false,
-            levelDone: false
+            levelDone: false,
+            levelSkipped: false
         });
     }
+
+    resetScores() {
+        const newWord = this.chooseRandomWord(this.state.dictionary);
+        let revealedSpecialCharacters = [];
+        revealedSpecialCharacters = revealedSpecialCharacters.concat(this.findLetter('-', newWord));
+
+        this.setState({
+            gamesPlayed: 0,
+            gamesWon: 0,
+            winStreak: 0,
+            currentWord: newWord,
+            revealedLetters: revealedSpecialCharacters,
+            hangedManStage: 0,
+            usedLetters: []
+        });
+
+    }
+
+    /**
+     * This method serves as a callback for the skip level button. Loads the next level as is the user lost
+     * the current one.
+     */
+    skipLevel() {
+        this.setState({
+            levelSkipped: true,
+            levelDone: true
+        })
+    }
 }
+
 
 export default Game;
