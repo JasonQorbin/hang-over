@@ -19,19 +19,19 @@ class Game extends React.Component {
         this.resetScores = this.resetScores.bind(this);
 
         this.state = {
-            dictionary : [],
-            currentWord: "",
-            revealedLetters: [],
-            usedLetters: [],
-            applicationReady: false,
-            applicationLoading:false,
-            hangedManStage: 0,
-            gamesWon: 0,
-            winStreak: 0,
-            gamesPlayed: 0,
-            levelDone: false,
-            wonLastLevel: false,
-            levelSkipped: false
+            dictionary : [],            //Holds that words read from the dictionary file
+            currentWord: "",            //The Wof the current level that the user is trying to guess
+            revealedLetters: [],        //Holds the index positions of letters in the current word that have been correctly guessed so far
+            usedLetters: [],            //Holds index positions of the letters from the alphabet the that have been used
+            applicationReady: false,    //Ready to play i.e. the dictionary has been loaded and a random word chosen
+            applicationLoading:false,   //The dictionary is being loaded (Display the loading screen while true)
+            hangedManStage: 0,          //Number of incorrect guesses in this level. Determines the hanging man image to be displayed
+            gamesWon: 0,                //Total games won
+            winStreak: 0,               //Total consecutive games won
+            gamesPlayed: 0,             //Total games played since the last reset or page reload
+            levelDone: false,           //User is out of guesses or completely guessed the word. Display win/loss screen when true.
+            wonLastLevel: false,        //If levelDone is true this makes the victory screen display instead of the loss screen.
+            levelSkipped: false         //True is the user clicked the skip button. Makes the skip screen display instead of the loss screen.
         };
     }
 
