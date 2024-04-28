@@ -1,3 +1,9 @@
+/**
+ * Functional component for the header of the main screen
+ *
+ * Also contain the "scoreboard"
+ *
+ */
 function Header(props) {
     const winRate = props.gamesPlayed == 0 ? 0 : (props.gamesWon/props.gamesPlayed*100).toFixed(2);
     return (

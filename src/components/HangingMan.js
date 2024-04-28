@@ -10,6 +10,9 @@ import state9 from '../assets/images/state9.GIF';
 import state10 from '../assets/images/state10.GIF';
 import state11 from '../assets/images/state11.GIF';
 
+/**
+ * Functional component to display the "hanging man" images
+ */
 function HangingMan(props) {
     let stateImage;
     switch (props.hangedManStage) {

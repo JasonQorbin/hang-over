@@ -1,3 +1,8 @@
+/**
+ * Functional that displays the transitional screens for wins, losses and skipping of levels
+ *
+ * Contains a button to allow the user to start the next level.
+ */
 function WinLossScreen(props) {
     if (props.wonLastLevel) {
         return (
