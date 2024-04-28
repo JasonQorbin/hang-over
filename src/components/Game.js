@@ -94,7 +94,13 @@ class Game extends React.Component {
     /** The maximum number of incorrect guesses before you lose the level/word. */
     MAX_DEATH_STAGES = 11;
 
-
+    /**
+     * Retrieves a random word from the dictionary. The dictionary is passed in so that we can use this function
+     * during app initialisation when the dictionary has not yet been saved to the app state.
+     *
+     * @param dictionary A reference to the dictionary.
+     * @returns string A word from the dictionary
+     */
     chooseRandomWord(dictionary) {
         return dictionary[Math.floor(Math.random() * (dictionary.length - 1))];
     }
@@ -172,6 +178,14 @@ class Game extends React.Component {
         }
     }
 
+    /**
+     * The callback method that fires when the user clicks a letter on the letter tray.
+     *
+     * Marks the letter as used, checks if new letters in the current word should be revealed, checks
+     * the win loss condition for the level and then updates the game state appropriately.
+     *
+     * @param eventObject
+     */
     selectLetter(eventObject) {
         let { usedLetters, revealedLetters, currentWord, hangedManStage } = this.state;
         const letterClicked = eventObject.target.innerText
@@ -196,9 +210,11 @@ class Game extends React.Component {
             return;
         }
 
+        //If no new letters were discovered then the guess was incorrect and the hangman graphic must advance.
         if (uncoveredLettersInTheWord.length == 0) {
             hangedManStage++;
         }
+
         const levelLost = hangedManStage >= this.MAX_DEATH_STAGES;
         if (levelLost) {
             this.setState({
@@ -220,6 +236,12 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * This is used to initialise the app state by calling the getReady method. We don't do this in the constructor
+     * because it's a long-running operation that involves updating state (which shouldn't be done until the component
+     * is on-screen). After starting the process it sets the applicationLoading variable to true to both keep the
+     * loading screen up and prevent us from firing the getReady function over and over.
+     */
     componentDidMount() {
         const {applicationReady, applicationLoading} = this.state;
 
@@ -253,6 +275,11 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * Called after the win/loss screen has displayed and the user clicks "Next level".
+     *
+     * Loads a new word from the dictionary and resting the game state for a new level.
+     */
     loadNewLevel() {
         let { gamesWon, winStreak, gamesPlayed, dictionary, wonLastLevel } = this.state;
         gamesPlayed++;
@@ -281,6 +308,11 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * Callback method for the "Reset Scores" button.
+     *
+     * Resets the game state to zero out the scores and also load up a new word and level.
+     */
     resetScores() {
         const newWord = this.chooseRandomWord(this.state.dictionary);
         let revealedSpecialCharacters = [];
