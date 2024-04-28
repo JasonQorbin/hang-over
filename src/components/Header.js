@@ -1,5 +1,5 @@
 function Header(props) {
-    const winRate = props.gamesPlayed == 0 ? 0 : (props.gamesWon/props.gamesPlayed).toFixed(2);
+    const winRate = props.gamesPlayed == 0 ? 0 : (props.gamesWon/props.gamesPlayed*100).toFixed(2);
     return (
         <header>
             <h1>Let's Play Hangman!</h1>
