@@ -6,6 +6,8 @@ import WordPanel from "./WordPanel";
 import HangingMan from "./HangingMan";
 import WinLossScreen from "./WinLossScreen";
 import Header from "./Header";
+import HelpBadge from "./HelpBadge";
+
 
 class Game extends React.Component {
     constructor(props) {
@@ -76,6 +78,11 @@ class Game extends React.Component {
                             usedLetters={usedLetters}
                             selectCallback={this.selectLetter}
                         />
+                    </div>
+                    <div id="help-tray">
+                        <div>
+                            <HelpBadge />
+                        </div>
                     </div>
                     <Button variant="outline-primary" onClick={this.skipLevel}>Skip Level</Button>
                     <Button variant="outline-primary" onClick={this.resetScores}>Reset Scores</Button>

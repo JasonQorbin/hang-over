@@ -71,3 +71,20 @@
 button {
   margin : 20px;
 }
+
+#help-tray {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#help-tray div {
+  display : flex;
+  flex-direction : row;
+  width: 720px;
+  justify-content : right;
+}
+
+.badge {
+  font-size : 16px;
+}
