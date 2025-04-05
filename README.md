@@ -2,7 +2,7 @@
 
 This simple React app lets you play the hangman game in your browser.
 
-![Screenshot from 2025-04-05 07-08-37](https://github.com/user-attachments/assets/9ba16b74-e3bf-470b-92f6-e270101d8a7a)
+![Screenshot from 2025-04-05 07-09-54](https://github.com/user-attachments/assets/cde62f54-bc66-4731-85ec-6e2d10e6b0df)
 
 ## Installation
 
